@@ -2,4 +2,4 @@
 
 ## Tech Stack
 
-**Client:** React, Redux, Redux Thunk, Ant Desing UI, TypeScript
+**Client:** React, Redux, Redux Thunk, Ant Desing, TypeScript
