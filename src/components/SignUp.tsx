@@ -1,7 +1,9 @@
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import api from "../utils/api";
+import showError from "../utils/showError";
 
 const layout = {
   labelCol: { span: 8 },
@@ -20,35 +22,28 @@ const validateMessages = {
   },
 };
 
-const onFinish = async (values: any, navigate: any, showErrorMsgFn: any) => {
-  try {
-    await api.post("/users/register", values);
-    navigate("/login");
-  } catch (error: any) {
-    showErrorMsgFn(error.response.data.errorMessage);
-  }
-};
-
-function SignUp() {
-  const [messageApi, contextHolder] = message.useMessage();
+const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const showErrorMsgFn = (errorMsg: string) => {
-    messageApi.open({
-      type: "error",
-      content: errorMsg,
-    });
+  const onFinish = async (values: any) => {
+    try {
+      setLoading(true);
+      await api.post("/users/register", values);
+      navigate("/login", { state: { newSignUp: true } });
+    } catch (error: any) {
+      showError(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      {contextHolder}
       <Form
         {...layout}
         name="nest-messages"
-        onFinish={(values: any) => {
-          onFinish(values, navigate, showErrorMsgFn);
-        }}
+        onFinish={onFinish}
         style={{ maxWidth: 600 }}
         validateMessages={validateMessages}
       >
@@ -78,13 +73,13 @@ function SignUp() {
           <Input />
         </Form.Item>
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={loading}>
             Submit
           </Button>
         </Form.Item>
       </Form>
     </>
   );
-}
+};
 
 export default SignUp;

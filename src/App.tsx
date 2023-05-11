@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { Layout, Menu, theme } from "antd";
 import SignUp from "./components/SignUp";
+import Login from "./components/Login";
 
 const { Header, Content, Footer } = Layout;
 
@@ -39,6 +40,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={null}></Route>
             <Route path="/register" element={<SignUp />}></Route>
+            <Route path="/login" element={<Login />}></Route>
           </Routes>
         </div>
       </Content>
