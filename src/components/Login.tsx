@@ -1,29 +1,34 @@
 import { Button, Form, Input, Result } from "antd";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import showError from "../utils/showError";
-import api from "../utils/api";
+import showAlert from "../utils/showAlert";
+import { LoginForm, UserDispatch } from "../types/user";
+import { login } from "../store/actions/userActions";
+import { AppState } from "../store";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [loading, setLoading] = useState(false);
+  const { data, loading, error } = useSelector((state: AppState) => state.user);
+  const dispatch: UserDispatch = useDispatch();
 
-  const onFinish = async (values: any) => {
-    try {
-      setLoading(true);
-      await api.post("/users/login", values);
-      navigate("/");
-    } catch (error: any) {
-      showError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    error && showAlert(error, "error");
+  }, [error]);
 
-  const onFinishFailed = (errorInfo: any) => {
-    showError(errorInfo);
+  useEffect(() => {
+    data.username && showAlert("You have successfully logged in!", "success");
+  }, [data.username]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    token && navigate("/");
+  }, [data, navigate]);
+
+  const onFinish = (values: LoginForm) => {
+    dispatch(login(values));
   };
 
   return (
@@ -34,7 +39,6 @@ const Login: React.FC = () => {
       style={{ maxWidth: 600 }}
       initialValues={{ remember: true }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
       <h2 style={{ textAlign: "center", marginBottom: "20px" }}>

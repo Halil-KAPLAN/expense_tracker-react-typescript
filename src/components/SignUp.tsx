@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import api from "../utils/api";
-import showError from "../utils/showError";
+import showAlert from "../utils/showAlert";
 
 const layout = {
   labelCol: { span: 8 },
@@ -32,7 +32,7 @@ const SignUp: React.FC = () => {
       await api.post("/users/register", values);
       navigate("/login", { state: { newSignUp: true } });
     } catch (error: any) {
-      showError(error);
+      showAlert(error.response.data.errorMessage, "error");
     } finally {
       setLoading(false);
     }
