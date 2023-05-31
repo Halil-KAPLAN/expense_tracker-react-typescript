@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Color } from "antd/es/color-picker";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import {
   Button,
   Form,
@@ -10,6 +11,7 @@ import {
   Table,
   Tag,
   ColorPicker,
+  Space,
 } from "antd";
 
 import {
@@ -18,36 +20,15 @@ import {
   CategoryForm,
   CategoryType,
 } from "../types/category";
-import { addCategory, getCategories } from "../store/actions/categoryActions";
+import {
+  addCategory,
+  deleteCategory,
+  getCategories,
+  updateCategory,
+} from "../store/actions/categoryActions";
 import { AppState } from "../store";
 
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Type",
-    dataIndex: "type",
-    key: "type",
-    render: (text: string, category: Category) => {
-      return <Tag color={category.color}>{text.toUpperCase()}</Tag>;
-    },
-  },
-  // {
-  //   title: "Action",
-  //   key: "action",
-  //   render: (_, record) => (
-  //     <Space size="middle">
-  //       <a>Invite {record.name}</a>
-  //       <a>Delete</a>
-  //     </Space>
-  //   ),
-  // },
-];
-
-type Mode = "new" | "edit";
+type Mode = "new" | "edit" | "delete";
 
 const emptyForm: CategoryForm = {
   name: "",
@@ -56,29 +37,45 @@ const emptyForm: CategoryForm = {
 };
 
 const Categories = () => {
-  const { data, loading, error } = useSelector(
-    (state: AppState) => state.categories
-  );
+  const { data, loading } = useSelector((state: AppState) => state.categories);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("new");
   const [form, setForm] = useState<CategoryForm>(emptyForm);
+  const [formId, setFormId] = useState<number | null>(null);
 
-  const showModal = (mode: Mode) => {
-    setIsModalOpen(true);
+  const showOrCloseModal = (mode: Mode, isShow: boolean) => {
+    setIsModalOpen(isShow);
     setMode(mode);
   };
 
   const handleOk = () => {
-    dispatch(addCategory(form));
-    setIsModalOpen(false);
-    setMode("new");
+    switch (mode) {
+      case "new":
+        dispatch(addCategory(form));
+        break;
+      case "edit":
+        dispatch(updateCategory(form, formId as number));
+        break;
+      case "delete":
+        dispatch(deleteCategory(formId as number));
+        break;
+    }
+
+    showOrCloseModal("new", false);
     setForm(emptyForm);
+    setFormId(null);
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
-    setMode("new");
+    showOrCloseModal("new", false);
     setForm(emptyForm);
+    setFormId(null);
+  };
+
+  const handleUpdate = (category: Category) => {
+    showOrCloseModal("edit", true);
+    setForm(category);
+    setFormId(category.id);
   };
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,50 +93,108 @@ const Categories = () => {
     dispatch(getCategories());
   }, [dispatch]);
 
-  const modalTitle = mode === "edit" ? "Update Category" : "New Category";
+  const modalTitle =
+    mode === "edit"
+      ? "Update Category"
+      : mode === "delete"
+      ? "Delete Category"
+      : "New Category";
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+      render: (text: string, category: Category) => {
+        return <Tag color={category.color}>{text.toUpperCase()}</Tag>;
+      },
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (text: string, category: Category) => (
+        <Space size="middle">
+          <EditOutlined
+            style={{ color: "#0390fc" }}
+            onClick={() => {
+              handleUpdate(category);
+            }}
+          />
+          <DeleteOutlined
+            style={{ color: "#c20808" }}
+            onClick={() => {
+              showOrCloseModal("delete", true);
+              setFormId(category.id);
+            }}
+          />
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <>
       <div>
-        <Button
-          type="primary"
-          onClick={() => {
-            showModal("new");
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: 10,
           }}
         >
-          New Category
-        </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              showOrCloseModal("new", true);
+            }}
+          >
+            New Category
+          </Button>
+        </div>
         <Modal
           title={modalTitle}
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
-          okButtonProps={{ disabled: !form.name }}
+          okButtonProps={{ disabled: !form.name && mode !== "delete" }}
         >
-          <Form
-            name="basic"
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 17 }}
-            style={{ maxWidth: 600 }}
-            initialValues={{ remember: true }}
-            autoComplete="off"
-          >
-            <Form.Item label="Category Name" required>
-              <Input name="name" value={form.name} onChange={onChangeName} />
-            </Form.Item>
-            <Form.Item label="Select">
-              <Select defaultValue={form.type} onChange={onChangeType}>
-                <Select.Option value="income">Income</Select.Option>
-                <Select.Option value="expense">Expense</Select.Option>
-              </Select>
-            </Form.Item>
-            <Form.Item label="Color">
-              <ColorPicker value={form.color} onChange={onChangeColor} />
-            </Form.Item>
-          </Form>
+          {mode === "edit" || mode === "new" ? (
+            <Form
+              name="basic"
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 17 }}
+              style={{ maxWidth: 600 }}
+              initialValues={{ remember: true }}
+              autoComplete="off"
+            >
+              <Form.Item label="Category Name" required>
+                <Input name="name" value={form.name} onChange={onChangeName} />
+              </Form.Item>
+              <Form.Item label="Select">
+                <Select
+                  value={form.type}
+                  defaultValue="expense"
+                  onChange={onChangeType}
+                >
+                  <Select.Option value="income">Income</Select.Option>
+                  <Select.Option value="expense">Expense</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label="Color">
+                <ColorPicker value={form.color} onChange={onChangeColor} />
+              </Form.Item>
+            </Form>
+          ) : mode === "delete" ? (
+            <span> Are you sure?</span>
+          ) : null}
         </Modal>
       </div>
-      <Table columns={columns} dataSource={data} />
+      <Table loading={loading} columns={columns} dataSource={data} />
     </>
   );
 };
