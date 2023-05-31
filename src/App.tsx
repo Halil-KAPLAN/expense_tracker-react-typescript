@@ -2,9 +2,6 @@ import React from "react";
 import {
   Route,
   Routes,
-  useLocation,
-  useNavigate,
-  useNavigation,
 } from "react-router-dom";
 import { Layout, Menu, theme } from "antd";
 import SignUp from "./components/SignUp";
