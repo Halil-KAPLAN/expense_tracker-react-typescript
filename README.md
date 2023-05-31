@@ -3,7 +3,7 @@
 
 This example is published on the following site. You can check.
 
-https://crud-example-react.netlify.app/
+https://expense-tracker-e10fae.netlify.app/
 
 
 ## Tech Stack
