@@ -9,17 +9,19 @@ const initialState: CategoryState = {
 const categoryReducer = (
   state: CategoryState = initialState,
   action: CategoryAction
-) => {
+): CategoryState => {
   switch (action.type) {
     case "GET_CATEGORIES_START":
+    case "ADD_CATEGORIES_START":
+    case "UPDATE_CATEGORIES_START":
+    case "DELETE_CATEGORIES_START":
       return { ...state, loading: true, error: "" };
+
     case "GET_CATEGORIES_SUCCESS":
       return { ...state, loading: false, data: action.payload };
     case "GET_CATEGORIES_ERROR":
       return { ...state, loading: false, error: "Error fetching categories!" };
 
-    case "ADD_CATEGORIES_START":
-      return { ...state, loading: true, error: "" };
     case "ADD_CATEGORIES_SUCCESS":
       return {
         ...state,
@@ -29,8 +31,6 @@ const categoryReducer = (
     case "ADD_CATEGORIES_ERROR":
       return { ...state, loading: false, error: "Error adding categories!" };
 
-    case "UPDATE_CATEGORIES_START":
-      return { ...state, loading: true, error: "" };
     case "UPDATE_CATEGORIES_SUCCESS":
       return {
         ...state,
@@ -41,8 +41,7 @@ const categoryReducer = (
       };
     case "UPDATE_CATEGORIES_ERROR":
       return { ...state, loading: false, error: "Error updating categories!" };
-    case "DELETE_CATEGORIES_START":
-      return { ...state, loading: true, error: "" };
+
     case "DELETE_CATEGORIES_SUCCESS":
       return {
         ...state,

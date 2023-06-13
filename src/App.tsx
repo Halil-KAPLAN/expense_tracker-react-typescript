@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Layout, Menu, theme } from "antd";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
@@ -10,6 +7,7 @@ import ProtectedRoute, {
   ProtectedRouteProps,
 } from "./components/ProtectedRoute";
 import Categories from "./components/Categories";
+import Records from "./components/Records";
 
 const { Header, Content, Footer } = Layout;
 
@@ -55,7 +53,24 @@ const App: React.FC = () => {
             <Route path="/" element={null}></Route>
             <Route path="/register" element={<SignUp />}></Route>
             <Route path="/login" element={<Login />}></Route>
-            <Route path='/categories' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Categories />} />} />
+            <Route
+              path="/categories"
+              element={
+                <ProtectedRoute
+                  {...defaultProtectedRouteProps}
+                  outlet={<Categories />}
+                />
+              }
+            />
+            <Route
+              path="/records"
+              element={
+                <ProtectedRoute
+                  {...defaultProtectedRouteProps}
+                  outlet={<Records />}
+                />
+              }
+            />
           </Routes>
         </div>
       </Content>

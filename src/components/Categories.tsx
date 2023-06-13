@@ -27,8 +27,7 @@ import {
   updateCategory,
 } from "../store/actions/categoryActions";
 import { AppState } from "../store";
-
-type Mode = "new" | "edit" | "delete";
+import { Mode } from "../types/general";
 
 const emptyForm: CategoryForm = {
   name: "",
@@ -38,7 +37,7 @@ const emptyForm: CategoryForm = {
 
 const Categories = () => {
   const { data, loading } = useSelector((state: AppState) => state.categories);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<Mode>("new");
   const [form, setForm] = useState<CategoryForm>(emptyForm);
   const [formId, setFormId] = useState<number | null>(null);
@@ -76,6 +75,11 @@ const Categories = () => {
     showOrCloseModal("edit", true);
     setForm(category);
     setFormId(category.id);
+  };
+
+  const handleDelete = (id: Category["id"]) => {
+    showOrCloseModal("delete", true);
+    setFormId(id);
   };
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,8 +132,7 @@ const Categories = () => {
           <DeleteOutlined
             style={{ color: "#c20808" }}
             onClick={() => {
-              showOrCloseModal("delete", true);
-              setFormId(category.id);
+              handleDelete(category.id);
             }}
           />
         </Space>
