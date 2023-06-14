@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { Layout, Menu, theme } from "antd";
+import { Layout, theme } from "antd";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import ProtectedRoute, {
@@ -8,8 +8,10 @@ import ProtectedRoute, {
 } from "./components/ProtectedRoute";
 import Categories from "./components/Categories";
 import Records from "./components/Records";
+import { AppHeader } from "./components/AppHeader";
+import { Logout } from "./components/Logout";
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 
 const App: React.FC = () => {
   const {
@@ -17,7 +19,6 @@ const App: React.FC = () => {
   } = theme.useToken();
 
   const token = localStorage.getItem("token");
-
   const defaultProtectedRouteProps: Omit<ProtectedRouteProps, "outlet"> = {
     isAuthenticated: !!token,
     authenticationPath: "/login",
@@ -25,26 +26,7 @@ const App: React.FC = () => {
 
   return (
     <Layout>
-      <Header style={{ position: "sticky", top: 0, zIndex: 1, width: "100%" }}>
-        <div
-          style={{
-            float: "left",
-            width: 120,
-            height: 31,
-            margin: "16px 24px 16px 0",
-            background: "rgba(255, 255, 255, 0.2)",
-          }}
-        />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["2"]}
-          items={new Array(3).fill(null).map((_, index) => ({
-            key: String(index + 1),
-            label: `nav ${index + 1}`,
-          }))}
-        />
-      </Header>
+      <AppHeader />
       <Content className="site-layout" style={{ padding: "0 50px" }}>
         <div
           style={{ padding: 24, minHeight: 380, background: colorBgContainer }}
@@ -53,6 +35,7 @@ const App: React.FC = () => {
             <Route path="/" element={null}></Route>
             <Route path="/register" element={<SignUp />}></Route>
             <Route path="/login" element={<Login />}></Route>
+            <Route path="/logout" element={<Logout />}></Route>
             <Route
               path="/categories"
               element={

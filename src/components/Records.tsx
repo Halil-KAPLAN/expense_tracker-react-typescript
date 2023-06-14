@@ -224,7 +224,7 @@ const Records = () => {
                   Select a Category
                 </Select.Option>
                 {categories.map((category) => (
-                  <Select.Option value={category.id}>
+                  <Select.Option value={category.id} key={category.id}>
                     {category.name}
                   </Select.Option>
                 ))}
@@ -236,7 +236,12 @@ const Records = () => {
         ) : null}
       </Modal>
 
-      <Table loading={loading} columns={columns} dataSource={data} />
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={data}
+        rowKey="id"
+      />
     </div>
   );
 };
