@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Layout, theme } from "antd";
 import SignUp from "./components/SignUp";
