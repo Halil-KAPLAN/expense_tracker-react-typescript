@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Menu, MenuProps } from "antd";
 import { Header } from "antd/es/layout/layout";
@@ -41,6 +41,10 @@ export const AppHeader = () => {
         {
           key: "/login",
           label: "Login",
+        },
+        {
+          key: "/register",
+          label: "Register",
         },
       ];
 

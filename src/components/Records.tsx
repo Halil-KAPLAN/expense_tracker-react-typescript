@@ -240,6 +240,7 @@ const Records = () => {
         loading={loading}
         columns={columns}
         dataSource={data}
+        pagination={false}
         rowKey="id"
       />
     </div>

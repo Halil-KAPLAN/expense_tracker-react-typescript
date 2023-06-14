@@ -201,6 +201,7 @@ const Categories = () => {
         loading={loading}
         columns={columns}
         dataSource={data}
+        pagination={false}
         rowKey="id"
       />
     </>

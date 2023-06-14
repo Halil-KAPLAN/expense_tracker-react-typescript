@@ -29,7 +29,7 @@ const SignUp: React.FC = () => {
   const onFinish = async (values: any) => {
     try {
       setLoading(true);
-      await api.post("/users/register", values);
+      await api().post("/users/register", values);
       navigate("/login", { state: { newSignUp: true } });
     } catch (error: any) {
       showAlert(error.response.data.errorMessage, "error");

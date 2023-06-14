@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Layout, theme } from "antd";
 import SignUp from "./components/SignUp";
@@ -18,9 +18,7 @@ const App: React.FC = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const token = localStorage.getItem("token");
   const defaultProtectedRouteProps: Omit<ProtectedRouteProps, "outlet"> = {
-    isAuthenticated: !!token,
     authenticationPath: "/login",
   };
 
@@ -32,7 +30,7 @@ const App: React.FC = () => {
           style={{ padding: 24, minHeight: 380, background: colorBgContainer }}
         >
           <Routes>
-            <Route path="/" element={null}></Route>
+            <Route path="/" element={<Login />}></Route>
             <Route path="/register" element={<SignUp />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/logout" element={<Logout />}></Route>

@@ -24,7 +24,7 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    token && navigate("/");
+    token && navigate("/records");
   }, [data, navigate]);
 
   const onFinish = (values: LoginForm) => {
