@@ -9,7 +9,7 @@ import { isLoggedIn } from "../store/actions/userActions";
 import { UserDispatch } from "../types/user";
 
 export const AppHeader = () => {
-  const { data, loading } = useSelector((state: AppState) => state.user);
+  const { data, loading, error } = useSelector((state: AppState) => state.user);
 
   const dispatch: UserDispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,6 +17,10 @@ export const AppHeader = () => {
   useEffect(() => {
     dispatch(isLoggedIn());
   }, [dispatch]);
+
+  if (!!error) {
+    localStorage.removeItem("token");
+  }
 
   const { pathname } = useLocation();
 
