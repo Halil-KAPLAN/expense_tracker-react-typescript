@@ -8,8 +8,8 @@ https://expense-tracker-e10fae.netlify.app/
 You can try with this user information for testing:
 
 ```bash
-    Username: test3
-    Password: 123456
+Username: test3
+Password: 123456
 ```
 
 ## Tech Stack
