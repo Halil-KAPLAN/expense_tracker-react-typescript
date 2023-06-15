@@ -4,6 +4,7 @@ A simple expense tracking system. It can be tracked by categorizing your expendi
 This example is published on the following site. You can check:
 
 https://expense-tracker-e10fae.netlify.app/
+#### Warning: It may run slow on first login. Backend takes time to start. It will accelerate later.
 
 You can try with this user information for testing:
 
